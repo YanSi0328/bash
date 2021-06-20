@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.system.dao.SysRoleDao">
+
+    <resultMap type="com.system.entity.SysRole" id="SysRoleMap">
+        <result property="roleId" column="role_id" jdbcType="INTEGER"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="queryById" resultMap="SysRoleMap">
+        select
+          role_id, role_name, user_id, create_time, update_time
+        from crm.sys_role
+        where role_id = #{roleId}
+    </select>
+
+
+    <select id="queryAll" resultMap="SysRoleMap">
+        select
+        role_id, role_name, user_id, create_time, update_time
+        from crm.sys_role
+        <where>
+            <if test="roleId != null">
+                and role_id = #{roleId}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                and role_name = #{roleName}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+    </select>
+
+    <insert id="add" keyProperty="roleId" useGeneratedKeys="true">
+        insert into crm.sys_role(role_name, user_id, create_time, update_time)
+        values (#{roleName}, #{userId}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateById">
+        update crm.sys_role
+        <set>
+            <if test="roleName != null and roleName != ''">
+                role_name = #{roleName},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where role_id = #{roleId}
+    </update>
+
+    <delete id="delById">
+        delete from crm.sys_role where role_id = #{roleId}
+    </delete>
+
+    <delete id="delByIds">
+        delete from crm.sys_role where role_id in
+        <foreach collection="list" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
